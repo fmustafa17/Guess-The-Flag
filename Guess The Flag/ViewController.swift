@@ -16,6 +16,7 @@ class ViewController: UIViewController {
     
     var score = 0
     var correctAnswer = 0
+    var questionCount = 1
     
     var countries: [String] = ["estonia", "france", "germany", "ireland", "italy", "monaco", "nigeria", "russia", "spain", "uk", "us"]
     
@@ -46,9 +47,16 @@ class ViewController: UIViewController {
         correctAnswer = Int.random(in: 0...2)
         title = "\(countries[correctAnswer].uppercased()) Score: \(score)"
     }
+    
+    func restartGame(action: UIAlertAction! = nil) {
+        questionCount = 1
+        score = 0
+        askQuestion()
+    }
 
     @IBAction func buttonTapped(_ sender: UIButton) {
         var title: String = ""
+        questionCount += 1
         
         if sender.tag == correctAnswer {
             title = "Correct"
@@ -58,9 +66,18 @@ class ViewController: UIViewController {
             score -= 1
         }
         
-        let ac = UIAlertController(title: title, message: "Your score is \(score).", preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: askQuestion))
-        present(ac, animated: true)
+        if questionCount == 10 {
+            let ac = UIAlertController(title: title,
+                                       message: "Final Score: \(score)",
+                                       preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Restart game", style: .default, handler: restartGame))
+            present(ac, animated: true)
+        } else {
+            let ac = UIAlertController(title: title, message: "Your score is \(score).", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: askQuestion))
+            present(ac, animated: true)
+        }
+
     }
     
 }
